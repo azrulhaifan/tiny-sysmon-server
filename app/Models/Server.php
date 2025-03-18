@@ -26,4 +26,12 @@ class Server extends Model
             }
         });
     }
+
+    /**
+     * Get the metrics for the server.
+     */
+    public function metrics()
+    {
+        return $this->hasMany(ServerMetric::class);
+    }
 }
