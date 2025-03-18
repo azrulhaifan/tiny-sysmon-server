@@ -44,18 +44,18 @@
 
             // Detect dark mode
             const isDarkMode = document.documentElement.classList.contains('dark');
-            
+
             // Set theme-specific colors
             const chartBackground = isDarkMode ? '#1e293b' : '#ffffff';
             const textColor = isDarkMode ? '#94a3b8' : '#334155';
             const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
-            
+
             // Theme-specific series colors
             const cpuColor = isDarkMode ? '#f87171' : '#FF5733';
             const memoryColor = isDarkMode ? '#60a5fa' : '#33A8FF';
             const swapColor = isDarkMode ? '#4ade80' : '#33FF57';
             const diskColor = isDarkMode ? '#c084fc' : '#A833FF';
-            
+
             // Annotation colors
             const minColor = isDarkMode ? '#10b981' : '#00E396';
             const avgColor = isDarkMode ? '#f59e0b' : '#FEB019';
@@ -63,13 +63,17 @@
 
             // Calculate min, avg, max for each dataset
             const calculateStats = (data) => {
-                if (!data.length) return { min: 0, avg: 0, max: 0 };
-                
+                if (!data.length) return {
+                    min: 0,
+                    avg: 0,
+                    max: 0
+                };
+
                 const min = Math.min(...data);
                 const max = Math.max(...data);
                 const sum = data.reduce((a, b) => a + b, 0);
                 const avg = sum / data.length;
-                
+
                 return {
                     min: parseFloat(min.toFixed(2)),
                     avg: parseFloat(avg.toFixed(2)),
@@ -125,7 +129,12 @@
                     x: {
                         format: 'yyyy-MM-dd HH:mm:ss'
                     },
-                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    custom: function({
+                        series,
+                        seriesIndex,
+                        dataPointIndex,
+                        w
+                    }) {
                         const timestamp = timestamps[dataPointIndex];
                         const value = series[seriesIndex][dataPointIndex];
                         const formattedDate = new Date(timestamp).toLocaleString();
@@ -184,8 +193,7 @@
                     }
                 },
                 annotations: {
-                    yaxis: [
-                        {
+                    yaxis: [{
                             y: cpuStats.min,
                             borderColor: minColor,
                             label: {
@@ -249,8 +257,7 @@
                     }
                 },
                 annotations: {
-                    yaxis: [
-                        {
+                    yaxis: [{
                             y: memoryStats.min,
                             borderColor: minColor,
                             label: {
@@ -314,8 +321,7 @@
                     }
                 },
                 annotations: {
-                    yaxis: [
-                        {
+                    yaxis: [{
                             y: swapStats.min,
                             borderColor: minColor,
                             label: {
@@ -364,6 +370,8 @@
                 }],
                 colors: [diskColor],
                 yaxis: {
+                    min: diskIoStats.min - 10,
+                    max: diskIoStats.max + 10, // Set max to the maximum value plus 100
                     title: {
                         text: 'Operations/Sec',
                         style: {
@@ -377,8 +385,7 @@
                     }
                 },
                 annotations: {
-                    yaxis: [
-                        {
+                    yaxis: [{
                             y: diskIoStats.min,
                             borderColor: minColor,
                             label: {
@@ -417,11 +424,11 @@
                     ]
                 }
             }).render();
-            
+
             // Listen for theme changes
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
-                    if (mutation.attributeName === 'class' && 
+                    if (mutation.attributeName === 'class' &&
                         mutation.target === document.documentElement) {
                         // Check if the dark mode status has actually changed
                         const currentDarkMode = document.documentElement.classList.contains('dark');
@@ -433,7 +440,7 @@
                     }
                 });
             });
-            
+
             observer.observe(document.documentElement, {
                 attributes: true
             });
