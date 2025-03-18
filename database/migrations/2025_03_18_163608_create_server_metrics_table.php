@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('server_metrics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('server_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('timestamp');
+            $table->bigInteger('timestamp');
             $table->bigInteger('uptime');
 
             // CPU metrics

@@ -62,6 +62,10 @@ class ServerResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('metrics')
+                    ->label('View Metrics')
+                    ->icon('heroicon-o-chart-bar')
+                    ->url(fn (Server $record): string => static::getUrl('metrics', ['record' => $record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -83,6 +87,7 @@ class ServerResource extends Resource
             'index' => Pages\ListServers::route('/'),
             'create' => Pages\CreateServer::route('/create'),
             'edit' => Pages\EditServer::route('/{record}/edit'),
+            'metrics' => Pages\ViewServerMetrics::route('/{record}/metrics'),
         ];
     }
 }
