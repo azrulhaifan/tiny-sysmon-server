@@ -20,10 +20,36 @@ class ViewServerMetrics extends Page implements Tables\Contracts\HasTable
     protected static string $view = 'filament.resources.server-resource.pages.view-server-metrics';
 
     public ?Server $record = null;
+    
+    // Add properties for chart data
+    public array $cpuData = [];
+    public array $memoryData = [];
+    public array $swapData = [];
+    public array $diskIoData = [];
+    public array $timestamps = [];
 
     public function mount(Server $record): void
     {
         $this->record = $record;
+        $this->loadChartData();
+    }
+    
+    protected function loadChartData(): void
+    {
+        // Get the last 24 hours of metrics, limited to 100 points
+        $metrics = ServerMetric::where('server_id', $this->record->id)
+            ->orderBy('timestamp', 'desc')
+            ->limit(100)
+            ->get()
+            ->reverse();
+            
+        foreach ($metrics as $metric) {
+            $this->timestamps[] = $metric->timestamp->format('Y-m-d H:i:s');
+            $this->cpuData[] = $metric->cpu_load;
+            $this->memoryData[] = $metric->memory_used_percent;
+            $this->swapData[] = $metric->swap_used_percent;
+            $this->diskIoData[] = $metric->disk_total_ops_per_sec;
+        }
     }
 
     public function getTableQuery(): Builder
