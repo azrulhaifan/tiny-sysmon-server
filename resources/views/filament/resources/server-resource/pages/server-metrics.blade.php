@@ -464,6 +464,11 @@
                             title: {
                                 text: 'Byte per second'
                             },
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(2);
+                                }
+                            }
                         },
                         theme: {
                             mode: isDarkMode ? 'dark' : 'light'

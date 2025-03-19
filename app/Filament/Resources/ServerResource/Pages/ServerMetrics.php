@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 
 class ServerMetrics extends Page implements HasForms
@@ -31,8 +32,8 @@ class ServerMetrics extends Page implements HasForms
     public ?array $data = [];
     public ?array $chartData = [];
     public bool $isChartVisible = false;
+    public string $selectedTimeframe = '30s';
     
-    // Untuk mendapatkan server_id dari URL
     public $record;
 
     public function mount($record): void
@@ -41,16 +42,17 @@ class ServerMetrics extends Page implements HasForms
         $this->form->fill([
             'dateStart' => Carbon::now()->subHours(3)->format('Y-m-d H:i'),
             'dateEnd' => Carbon::now()->format('Y-m-d H:i'),
+            'timeframe' => '30s', // Add default timeframe here
         ]);
     }
-
+    
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make('Filter Data')
                     ->schema([
-                        Grid::make(2)
+                        Grid::make(3)
                             ->schema([
                                 DateTimePicker::make('dateStart')
                                     ->label('Date Start')
@@ -64,6 +66,18 @@ class ServerMetrics extends Page implements HasForms
                                     ->maxDate(now())
                                     ->seconds(false)
                                     ->displayFormat('Y-m-d H:i'),
+                                Select::make('timeframe')
+                                    ->label('Time Frame')
+                                    ->options([
+                                        '30s' => '30 Seconds',
+                                        '1m' => '1 Minute',
+                                        '2m' => '2 Minutes',
+                                        '3m' => '3 Minutes',
+                                        '5m' => '5 Minutes',
+                                        '15m' => '15 Minutes',
+                                    ])
+                                    ->default('30s')
+                                    ->required(),
                             ]),
                     ])
                     ->collapsible(),
@@ -90,18 +104,37 @@ class ServerMetrics extends Page implements HasForms
         $dateStart = strtotime($dateStart);
         $dateEnd = strtotime($dateEnd);
         
+        // Get interval in seconds based on timeframe
+        $interval = match($this->data['timeframe']) {
+            '30s' => 30,
+            '1m' => 60,
+            '2m' => 120,
+            '3m' => 180,
+            '5m' => 300,
+            '15m' => 900,
+            default => 30,
+        };
+
+        // Temporarily disable ONLY_FULL_GROUP_BY
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        
         $metrics = ServerMetric::select(
-                DB::raw('FROM_UNIXTIME(timestamp) as dates'),
-                DB::raw('cpu_load as pointCpu'),
-                DB::raw('memory_used_percent as pointMemory'),
-                DB::raw('swap_used_percent as pointSwap'),
-                DB::raw('disk_read_ops_per_sec as pointDiskRead'),
-                DB::raw('disk_write_ops_per_sec as pointDiskWrite')
+                DB::raw("FLOOR(timestamp / {$interval}) * {$interval} as time_interval"),
+                DB::raw("FROM_UNIXTIME(FLOOR(timestamp / {$interval}) * {$interval}) as dates"),
+                DB::raw('AVG(cpu_load) as pointCpu'),
+                DB::raw('AVG(memory_used_percent) as pointMemory'),
+                DB::raw('AVG(swap_used_percent) as pointSwap'),
+                DB::raw('AVG(disk_read_ops_per_sec) as pointDiskRead'),
+                DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite')
             )
             ->where('server_id', $this->record)
             ->whereBetween('timestamp', [$dateStart, $dateEnd])
-            ->orderBy('dates')
+            ->groupBy(DB::raw("FLOOR(timestamp / {$interval}) * {$interval}"))
+            ->orderBy('time_interval')
             ->get();
+            
+        // Reset session SQL mode
+        DB::statement("SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode,',ONLY_FULL_GROUP_BY'));");
         
         $this->chartData = [
             'dates' => $metrics->pluck('dates'),
