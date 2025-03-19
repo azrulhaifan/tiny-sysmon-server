@@ -13,6 +13,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 
 class ServerMetrics extends Page implements HasForms
 {
@@ -37,7 +38,7 @@ class ServerMetrics extends Page implements HasForms
     {
         $this->record = $record;
         $this->form->fill([
-            'dateStart' => Carbon::now()->subDays(7)->format('Y-m-d'),
+            'dateStart' => Carbon::now()->subDays(1)->format('Y-m-d'),
             'dateEnd' => Carbon::now()->format('Y-m-d'),
         ]);
     }
@@ -52,10 +53,12 @@ class ServerMetrics extends Page implements HasForms
                             ->schema([
                                 DatePicker::make('dateStart')
                                     ->label('Date Start')
-                                    ->required(),
+                                    ->required()
+                                    ->maxDate(fn () => $this->data['dateEnd'] ?? now()),
                                 DatePicker::make('dateEnd')
                                     ->label('Date End')
-                                    ->required(),
+                                    ->required()
+                                    ->maxDate(now()),
                             ]),
                     ])
                     ->collapsible(),
@@ -67,8 +70,20 @@ class ServerMetrics extends Page implements HasForms
     {
         $this->validate();
         
-        $dateStart = strtotime(Carbon::parse($this->data['dateStart'])->startOfDay());
-        $dateEnd = strtotime(Carbon::parse($this->data['dateEnd'])->endOfDay());
+        $dateStart = Carbon::parse($this->data['dateStart']);
+        $dateEnd = Carbon::parse($this->data['dateEnd']);
+        
+        if ($dateStart->diffInDays($dateEnd) > 3) {
+            Notification::make()
+                ->warning()
+                ->title('Invalid Date Range')
+                ->body('Please select a date range of 3 days or less.')
+                ->send();
+            return;
+        }
+        
+        $dateStart = strtotime($dateStart->startOfDay());
+        $dateEnd = strtotime($dateEnd->endOfDay());
         
         $metrics = ServerMetric::select(
                 DB::raw('FROM_UNIXTIME(timestamp) as dates'),
