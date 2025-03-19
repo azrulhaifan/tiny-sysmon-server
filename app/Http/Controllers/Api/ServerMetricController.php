@@ -21,6 +21,13 @@ class ServerMetricController extends Controller
             ], 401);
         }
 
+        // Check if server is active
+        if ($server->is_active == 0) {
+            return response()->json([
+                'message' => 'Server is inactive'
+            ], 403);
+        }
+
         // Validate payload
         $validator = Validator::make($request->all(), [
             'timestamp' => 'required|string',
@@ -85,6 +92,10 @@ class ServerMetricController extends Controller
         $metric->network_rx_sec = $request->input('network.total.rx_sec');
         $metric->network_tx_sec = $request->input('network.total.tx_sec');
         $metric->save();
+
+        // Update last metrics datetime
+        $server->last_metrics_dt = now();
+        $server->save();
 
         return response()->json([
             'message' => 'Metric stored successfully'
