@@ -87,7 +87,8 @@ class ServerResource extends Resource
             'index' => Pages\ListServers::route('/'),
             'create' => Pages\CreateServer::route('/create'),
             'edit' => Pages\EditServer::route('/{record}/edit'),
-            'metrics' => Pages\ViewServerMetrics::route('/{record}/metrics'),
+            // 'metrics' => Pages\ViewServerMetrics::route('/{record}/metrics'),
+            'metrics' => Pages\ServerMetrics::route('/{record}/metrics'),
         ];
     }
 }
