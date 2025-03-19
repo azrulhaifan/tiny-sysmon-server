@@ -32,7 +32,6 @@ class ServerMetric extends Model
     ];
 
     protected $casts = [
-        'timestamp' => 'datetime',
         'cpu_load' => 'float',
         'memory_used_percent' => 'float',
         'swap_used_percent' => 'float',
