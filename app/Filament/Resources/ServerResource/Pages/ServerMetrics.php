@@ -72,7 +72,11 @@ class ServerMetrics extends Page implements HasForms
         
         $metrics = ServerMetric::select(
                 DB::raw('FROM_UNIXTIME(timestamp) as dates'),
-                DB::raw('cpu_load as pointCpu')
+                DB::raw('cpu_load as pointCpu'),
+                DB::raw('memory_used_percent as pointMemory'),
+                DB::raw('swap_used_percent as pointSwap'),
+                DB::raw('disk_read_ops_per_sec as pointDiskRead'),
+                DB::raw('disk_write_ops_per_sec as pointDiskWrite')
             )
             ->where('server_id', $this->record)
             ->whereBetween('timestamp', [$dateStart, $dateEnd])
@@ -82,6 +86,10 @@ class ServerMetrics extends Page implements HasForms
         $this->chartData = [
             'dates' => $metrics->pluck('dates'),
             'pointCpu' => $metrics->pluck('pointCpu'),
+            'pointMemory' => $metrics->pluck('pointMemory'),
+            'pointSwap' => $metrics->pluck('pointSwap'),
+            'pointDiskRead' => $metrics->pluck('pointDiskRead'),
+            'pointDiskWrite' => $metrics->pluck('pointDiskWrite'),
         ];
         
         $this->isChartVisible = true;
