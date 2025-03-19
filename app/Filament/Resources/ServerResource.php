@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -55,6 +56,10 @@ class ServerResource extends Resource
                             <li>or: 30s metric interval will reach 86.400 record in 30 days</li>
                         </ul>
                     </div>')),
+                Forms\Components\Toggle::make('is_active')
+                    ->default(true)
+                    ->required()
+                    ->helperText("If inactive, the server will not be monitored and not received any metrics."),
             ]);
     }
 
@@ -72,6 +77,13 @@ class ServerResource extends Resource
                     ->numeric(
                         thousandsSeparator: ',',
                     )
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('last_metrics_dt')
+                    ->dateTime('Y-m-d H:i:s')
+                    ->placeholder('-')
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

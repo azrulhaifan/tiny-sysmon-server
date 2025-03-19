@@ -14,7 +14,9 @@ class Server extends Model
         'name',
         'api_key',
         'description',
-        'retention'
+        'retention',
+        'last_metrics_dt',
+        'is_active'
     ];
 
     protected static function boot()
