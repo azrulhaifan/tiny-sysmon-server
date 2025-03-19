@@ -49,6 +49,12 @@ class ServerMetrics extends Page implements HasForms
         $this->submit();
     }
 
+    public function getTitle(): string
+    {
+        $server = ServerResource::getModel()::find($this->record);
+        return $server->name . ' Metrics';
+    }
+
     public function form(Form $form): Form
     {
         return $form
