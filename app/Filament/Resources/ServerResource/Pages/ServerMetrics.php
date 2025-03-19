@@ -13,6 +13,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Notifications\Notification;
 
 class ServerMetrics extends Page implements HasForms
@@ -38,8 +39,8 @@ class ServerMetrics extends Page implements HasForms
     {
         $this->record = $record;
         $this->form->fill([
-            'dateStart' => Carbon::now()->subDays(1)->format('Y-m-d'),
-            'dateEnd' => Carbon::now()->format('Y-m-d'),
+            'dateStart' => Carbon::now()->subHours(3)->format('Y-m-d H:i'),
+            'dateEnd' => Carbon::now()->format('Y-m-d H:i'),
         ]);
     }
 
@@ -51,14 +52,18 @@ class ServerMetrics extends Page implements HasForms
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                DatePicker::make('dateStart')
+                                DateTimePicker::make('dateStart')
                                     ->label('Date Start')
                                     ->required()
-                                    ->maxDate(fn () => $this->data['dateEnd'] ?? now()),
-                                DatePicker::make('dateEnd')
+                                    ->maxDate(fn () => $this->data['dateEnd'] ?? now())
+                                    ->seconds(false)
+                                    ->displayFormat('Y-m-d H:i'),
+                                DateTimePicker::make('dateEnd')
                                     ->label('Date End')
                                     ->required()
-                                    ->maxDate(now()),
+                                    ->maxDate(now())
+                                    ->seconds(false)
+                                    ->displayFormat('Y-m-d H:i'),
                             ]),
                     ])
                     ->collapsible(),
@@ -73,17 +78,17 @@ class ServerMetrics extends Page implements HasForms
         $dateStart = Carbon::parse($this->data['dateStart']);
         $dateEnd = Carbon::parse($this->data['dateEnd']);
         
-        if ($dateStart->diffInDays($dateEnd) > 3) {
+        if ($dateEnd->diffInHours($dateStart) > 24) {
             Notification::make()
                 ->warning()
                 ->title('Invalid Date Range')
-                ->body('Please select a date range of 3 days or less.')
+                ->body('Please select a date range of 24 hours or less.')
                 ->send();
             return;
         }
         
-        $dateStart = strtotime($dateStart->startOfDay());
-        $dateEnd = strtotime($dateEnd->endOfDay());
+        $dateStart = strtotime($dateStart);
+        $dateEnd = strtotime($dateEnd);
         
         $metrics = ServerMetric::select(
                 DB::raw('FROM_UNIXTIME(timestamp) as dates'),
