@@ -71,7 +71,12 @@ class ServerResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('api_key')
                     ->searchable()
-                    ->copyable(),
+                    ->icon('heroicon-m-document-duplicate')
+                    ->iconPosition('after')
+                    ->copyable(fn($record) => $record->api_key)
+                    ->formatStateUsing(fn($state) => str_repeat('•', 8))
+                    // ->tooltip(fn ($record) => $record->api_key)
+                    ->label('API Key'),
                 Tables\Columns\TextColumn::make('retention')
                     ->label('Retention (rec)')
                     ->numeric(
