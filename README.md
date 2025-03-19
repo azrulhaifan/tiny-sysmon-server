@@ -98,6 +98,15 @@ Once the application is running, you can access the following features:
 -   **Server Management**: Add and configure multiple servers to monitor.
 -   **Metric Visualization**: Analyze and track resource usage over time.
 
+## Screenshot
+
+Here is a preview of the SysMon server in action:
+
+<img src="screenshots/dashboard.png" width="200"/>
+<img src="screenshots/server-list.png" width="200"/>
+<img src="screenshots/metrics-1.png" width="200"/>
+<img src="screenshots/metrics-2.png" width="200"/>
+
 ## Planning
 
 The following features are planned for future releases:
