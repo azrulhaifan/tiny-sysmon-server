@@ -3,8 +3,8 @@
         {{ $this->form }}
 
         <div class="mt-4">
-            <x-filament::button 
-                type="submit" 
+            <x-filament::button
+                type="submit"
                 wire:loading.attr="disabled"
                 color="primary">
                 Show Graph
@@ -478,8 +478,8 @@
             }"></div>
         </div>
 
-                <!-- Network Traffic -->
-                <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
+        <!-- Network Traffic -->
+        <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Network Traffic (KB/s)</h3>
             <div class="h-80" x-data="{
                 init() {

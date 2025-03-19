@@ -60,12 +60,13 @@ class ServerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('metrics')
                     ->label('View Metrics')
                     ->icon('heroicon-o-chart-bar')
-                    ->url(fn (Server $record): string => static::getUrl('metrics', ['record' => $record])),
+                    ->color('success')
+                    ->url(fn(Server $record): string => static::getUrl('metrics', ['record' => $record])),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
