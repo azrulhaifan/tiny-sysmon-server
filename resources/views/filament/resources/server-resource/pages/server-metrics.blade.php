@@ -66,10 +66,7 @@
                             position: 'top'
                         },
                         markers: {
-                            size: 4,
-                            hover: {
-                                size: 6
-                            }
+                            size: 0,  // Change from 4 to 0 to remove dots
                         },
                         grid: {
                             borderColor: isDarkMode ? '#404040' : '#e7e7e7',
@@ -196,10 +193,7 @@
                             position: 'top'
                         },
                         markers: {
-                            size: 4,
-                            hover: {
-                                size: 6
-                            }
+                            size: 0,  // Change from 4 to 0 to remove dots
                         },
                         grid: {
                             borderColor: isDarkMode ? '#404040' : '#e7e7e7',
@@ -326,10 +320,7 @@
                             position: 'top'
                         },
                         markers: {
-                            size: 4,
-                            hover: {
-                                size: 6
-                            }
+                            size: 0,  // Change from 4 to 0 to remove dots
                         },
                         grid: {
                             borderColor: isDarkMode ? '#404040' : '#e7e7e7',
@@ -460,10 +451,7 @@
                             position: 'top'
                         },
                         markers: {
-                            size: 4,
-                            hover: {
-                                size: 6
-                            }
+                            size: 0,  // Change from 4 to 0 to remove dots
                         },
                         grid: {
                             borderColor: isDarkMode ? '#404040' : '#e7e7e7',
