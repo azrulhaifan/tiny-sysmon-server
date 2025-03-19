@@ -55,6 +55,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -130,6 +138,11 @@
                                 formatter: function(val) {
                                     return val.toFixed(2) + '%';
                                 }
+                            },
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
+                                }
                             }
                         },
                         theme: {
@@ -182,6 +195,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -257,6 +278,11 @@
                                 formatter: function(val) {
                                     return val.toFixed(2) + '%';
                                 }
+                            },
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
+                                }
                             }
                         },
                         theme: {
@@ -309,6 +335,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -384,6 +418,11 @@
                                 formatter: function(val) {
                                     return val.toFixed(2) + '%';
                                 }
+                            },
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
+                                }
                             }
                         },
                         theme: {
@@ -440,6 +479,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -474,6 +521,11 @@
                             y: {
                                 formatter: function(val) {
                                     return val.toFixed(2) + ' KB/s';
+                                }
+                            },
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
                                 }
                             }
                         },
@@ -530,6 +582,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -557,6 +617,13 @@
                             labels: {
                                 formatter: function (val) {
                                     return val.toFixed(2);
+                                }
+                            }
+                        },
+                        tooltip: {
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
                                 }
                             }
                         },
@@ -613,6 +680,14 @@
                                 rotateAlways: true,
                                 style: {
                                     fontSize: '12px',
+                                },
+                                formatter: function (val) {
+                                    return new Date(val).toLocaleTimeString('en-US', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            hour12: false
+                                        });
                                 }
                             }
                         },
@@ -640,6 +715,13 @@
                             labels: {
                                 formatter: function (val) {
                                     return val.toFixed(2);
+                                }
+                            }
+                        },
+                        tooltip: {
+                            x: {
+                                formatter: function(value, { dataPointIndex }) {
+                                    return {{ json_encode($chartData['dates']) }}[dataPointIndex];
                                 }
                             }
                         },
