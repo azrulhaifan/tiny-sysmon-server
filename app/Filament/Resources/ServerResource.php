@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class ServerResource extends Resource
@@ -35,6 +36,25 @@ class ServerResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('retention')
+                    ->label('Data Retention (record)')
+                    ->numeric()
+                    ->default(100000)
+                    ->required()
+                    ->minValue(1440)
+                    ->maxValue(100000)
+                    ->helperText(new HtmlString('<div class="space-y-2">
+                        <p>Number of records to keep in the metrics data.</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Default: 80,000 records</li>
+                            <li>Min: 1440 record</li>
+                            <li>Max: 100,000 records</li>
+                            <li>Each record represents one metric entry</li>
+                            <li>Older records will be automatically deleted</li>
+                            <li>Example : 15s metric interval will reach 40.320 record in 7 days (168 hours)</li>
+                            <li>or: 30s metric interval will reach 86.400 record in 30 days</li>
+                        </ul>
+                    </div>')),
             ]);
     }
 
@@ -47,6 +67,12 @@ class ServerResource extends Resource
                 Tables\Columns\TextColumn::make('api_key')
                     ->searchable()
                     ->copyable(),
+                Tables\Columns\TextColumn::make('retention')
+                    ->label('Retention (rec)')
+                    ->numeric(
+                        thousandsSeparator: ',',
+                    )
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
