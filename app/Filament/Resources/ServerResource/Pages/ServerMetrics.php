@@ -70,29 +70,18 @@ class ServerMetrics extends Page implements HasForms
         $dateStart = strtotime(Carbon::parse($this->data['dateStart'])->startOfDay());
         $dateEnd = strtotime(Carbon::parse($this->data['dateEnd'])->endOfDay());
         
-        // Ambil data CPU Load - min, max, avg dikelompokkan per hari
-        // Filter berdasarkan server_id dari record
         $metrics = ServerMetric::select(
-                DB::raw('FROM_UNIXTIME(timestamp) as date'),
-                DB::raw('cpu_load as point_cpu')
+                DB::raw('FROM_UNIXTIME(timestamp) as dates'),
+                DB::raw('cpu_load as pointCpu')
             )
             ->where('server_id', $this->record)
             ->whereBetween('timestamp', [$dateStart, $dateEnd])
-            ->orderBy('date')
+            ->orderBy('dates')
             ->get();
         
-        // Format data untuk chart
-        $dates = [];
-        $pointCpu = [];
-        
-        foreach ($metrics as $metric) {
-            $dates[] = $metric->date;
-            $pointCpu[] = round($metric->point_cpu, 2);
-        }
-        
         $this->chartData = [
-            'dates' => $dates,
-            'pointCpu' => $pointCpu,
+            'dates' => $metrics->pluck('dates'),
+            'pointCpu' => $metrics->pluck('pointCpu'),
         ];
         
         $this->isChartVisible = true;
