@@ -79,6 +79,7 @@ class ServerResource extends Resource
                     )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_metrics_dt')
+                    ->label('Last Metrics')
                     ->dateTime('Y-m-d H:i:s')
                     ->placeholder('-')
                     ->sortable(),
