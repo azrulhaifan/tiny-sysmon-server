@@ -137,6 +137,8 @@ class ServerMetrics extends Page implements HasForms
             DB::raw('AVG(swap_used_percent) as pointSwap'),
             DB::raw('AVG(disk_read_ops_per_sec) as pointDiskRead'),
             DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite'),
+            DB::raw('AVG(disk_read_bytes_per_sec / 1024) as pointDiskReadBytes'),
+            DB::raw('AVG(disk_write_bytes_per_sec / 1024) as pointDiskWriteBytes'),
             DB::raw('AVG(network_rx_sec / 1024) as pointNetworkRx'),
             DB::raw('AVG(network_tx_sec / 1024) as pointNetworkTx')
         )
@@ -156,6 +158,8 @@ class ServerMetrics extends Page implements HasForms
             'pointSwap' => $metrics->pluck('pointSwap'),
             'pointDiskRead' => $metrics->pluck('pointDiskRead'),
             'pointDiskWrite' => $metrics->pluck('pointDiskWrite'),
+            'pointDiskReadBytes' => $metrics->pluck('pointDiskReadBytes'),
+            'pointDiskWriteBytes' => $metrics->pluck('pointDiskWriteBytes'),
             'pointNetworkRx' => $metrics->pluck('pointNetworkRx'),
             'pointNetworkTx' => $metrics->pluck('pointNetworkTx'),
         ];

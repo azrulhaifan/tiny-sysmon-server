@@ -42,6 +42,8 @@ class ServerMetricController extends Controller
             'diskIO.readOpsPerSec' => 'required|numeric',
             'diskIO.writeOpsPerSec' => 'required|numeric',
             'diskIO.totalOpsPerSec' => 'required|numeric',
+            'diskIO.readBytesPerSec' => 'required|numeric',
+            'diskIO.writeBytesPerSec' => 'required|numeric',
             'network.total.rx_bytes' => 'required|numeric',
             'network.total.tx_bytes' => 'required|numeric',
             'network.total.rx_sec' => 'required|numeric',
@@ -76,6 +78,8 @@ class ServerMetricController extends Controller
         $metric->disk_read_ops_per_sec = $request->input('diskIO.readOpsPerSec');
         $metric->disk_write_ops_per_sec = $request->input('diskIO.writeOpsPerSec');
         $metric->disk_total_ops_per_sec = $request->input('diskIO.totalOpsPerSec');
+        $metric->disk_read_bytes_per_sec = $request->input('diskIO.readBytesPerSec');
+        $metric->disk_write_bytes_per_sec = $request->input('diskIO.writeBytesPerSec');
         $metric->network_rx_bytes = $request->input('network.total.rx_bytes');
         $metric->network_tx_bytes = $request->input('network.total.tx_bytes');
         $metric->network_rx_sec = $request->input('network.total.rx_sec');

@@ -16,7 +16,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <!-- CPU Load -->
         <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">CPU Load (%)</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">CPU Load (%)</h3>
             <div class="h-80" x-data="{
                 init() {
                     const isDarkMode = document.querySelector('html').classList.contains('dark');
@@ -143,7 +143,7 @@
 
         <!-- Memory Load -->
         <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Memory Load (%)</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Memory Load (%)</h3>
             <div class="h-80" x-data="{
                 init() {
                     const isDarkMode = document.querySelector('html').classList.contains('dark');
@@ -270,7 +270,7 @@
 
         <!-- Swap Load -->
         <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Swap Load (%)</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Swap Load (%)</h3>
             <div class="h-80" x-data="{
                 init() {
                     const isDarkMode = document.querySelector('html').classList.contains('dark');
@@ -395,92 +395,9 @@
             }"></div>
         </div>
 
-        <!-- Disk Load -->
-        <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Disk Load (Bps)</h3>
-            <div class="h-80" x-data="{
-                init() {
-                    const isDarkMode = document.querySelector('html').classList.contains('dark');
-                    const textColor = isDarkMode ? '#fff' : '#373d3f';
-                    const minColor = isDarkMode ? '#10b981' : '#00E396';
-                    const avgColor = isDarkMode ? '#f59e0b' : '#FEB019';
-                    const maxColor = isDarkMode ? '#ef4444' : '#FF4560';
-
-                    const chart = new ApexCharts(this.$el, {
-                        chart: {
-                            type: 'line',
-                            height: 350,
-                            foreColor: textColor,
-                            toolbar: {
-                                show: true,
-                                tools: {
-                                    download: true,
-                                    selection: true,
-                                    zoom: true,
-                                    zoomin: true,
-                                    zoomout: true,
-                                    pan: true,
-                                    reset: true,
-                                },
-                            },
-                        },
-                        colors: ['#00E396', '#FF4560'], // Green for read, Red for write
-                        series: [{
-                            name: 'Disk Read',
-                            data: {{ json_encode($chartData['pointDiskRead']) }}
-                        }, {
-                            name: 'Disk Write',
-                            data: {{ json_encode($chartData['pointDiskWrite']) }}
-                        }],
-                        xaxis: {
-                            categories: {{ json_encode($chartData['dates']) }},
-                            labels: {
-                                rotate: -45,
-                                rotateAlways: true,
-                                style: {
-                                    fontSize: '12px',
-                                }
-                            }
-                        },
-                        stroke: {
-                            curve: 'smooth',
-                            width: 2,
-                        },
-                        legend: {
-                            position: 'top'
-                        },
-                        markers: {
-                            size: 0,  // Change from 4 to 0 to remove dots
-                        },
-                        grid: {
-                            borderColor: isDarkMode ? '#404040' : '#e7e7e7',
-                            row: {
-                                colors: [isDarkMode ? '#333' : '#f3f3f3', 'transparent'],
-                                opacity: 0.5
-                            },
-                        },
-                        yaxis: {
-                            title: {
-                                text: 'Byte per second'
-                            },
-                            labels: {
-                                formatter: function (val) {
-                                    return val.toFixed(2);
-                                }
-                            }
-                        },
-                        theme: {
-                            mode: isDarkMode ? 'dark' : 'light'
-                        }
-                    });
-                    chart.render();
-                }
-            }"></div>
-        </div>
-
         <!-- Network Traffic -->
         <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Network Traffic (KB/s)</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Network Traffic (KB/s)</h3>
             <div class="h-80" x-data="{
                 init() {
                     const isDarkMode = document.querySelector('html').classList.contains('dark');
@@ -557,6 +474,172 @@
                             y: {
                                 formatter: function(val) {
                                     return val.toFixed(2) + ' KB/s';
+                                }
+                            }
+                        },
+                        theme: {
+                            mode: isDarkMode ? 'dark' : 'light'
+                        }
+                    });
+                    chart.render();
+                }
+            }"></div>
+        </div>
+
+        <!-- Disk Load -->
+        <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Disk Load (iops)</h3>
+            <div class="h-80" x-data="{
+                init() {
+                    const isDarkMode = document.querySelector('html').classList.contains('dark');
+                    const textColor = isDarkMode ? '#fff' : '#373d3f';
+                    const minColor = isDarkMode ? '#10b981' : '#00E396';
+                    const avgColor = isDarkMode ? '#f59e0b' : '#FEB019';
+                    const maxColor = isDarkMode ? '#ef4444' : '#FF4560';
+
+                    const chart = new ApexCharts(this.$el, {
+                        chart: {
+                            type: 'line',
+                            height: 350,
+                            foreColor: textColor,
+                            toolbar: {
+                                show: true,
+                                tools: {
+                                    download: true,
+                                    selection: true,
+                                    zoom: true,
+                                    zoomin: true,
+                                    zoomout: true,
+                                    pan: true,
+                                    reset: true,
+                                },
+                            },
+                        },
+                        colors: ['#00E396', '#FF4560'], // Green for read, Red for write
+                        series: [{
+                            name: 'Disk Read',
+                            data: {{ json_encode($chartData['pointDiskRead']) }}
+                        }, {
+                            name: 'Disk Write',
+                            data: {{ json_encode($chartData['pointDiskWrite']) }}
+                        }],
+                        xaxis: {
+                            categories: {{ json_encode($chartData['dates']) }},
+                            labels: {
+                                rotate: -45,
+                                rotateAlways: true,
+                                style: {
+                                    fontSize: '12px',
+                                }
+                            }
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2,
+                        },
+                        legend: {
+                            position: 'top'
+                        },
+                        markers: {
+                            size: 0,  // Change from 4 to 0 to remove dots
+                        },
+                        grid: {
+                            borderColor: isDarkMode ? '#404040' : '#e7e7e7',
+                            row: {
+                                colors: [isDarkMode ? '#333' : '#f3f3f3', 'transparent'],
+                                opacity: 0.5
+                            },
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'IO Per Second'
+                            },
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(2);
+                                }
+                            }
+                        },
+                        theme: {
+                            mode: isDarkMode ? 'dark' : 'light'
+                        }
+                    });
+                    chart.render();
+                }
+            }"></div>
+        </div>
+
+        <!-- Disk Byte Load -->
+        <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Disk R/W Operation (KB/s)</h3>
+            <div class="h-80" x-data="{
+                init() {
+                    const isDarkMode = document.querySelector('html').classList.contains('dark');
+                    const textColor = isDarkMode ? '#fff' : '#373d3f';
+                    const minColor = isDarkMode ? '#10b981' : '#00E396';
+                    const avgColor = isDarkMode ? '#f59e0b' : '#FEB019';
+                    const maxColor = isDarkMode ? '#ef4444' : '#FF4560';
+
+                    const chart = new ApexCharts(this.$el, {
+                        chart: {
+                            type: 'line',
+                            height: 350,
+                            foreColor: textColor,
+                            toolbar: {
+                                show: true,
+                                tools: {
+                                    download: true,
+                                    selection: true,
+                                    zoom: true,
+                                    zoomin: true,
+                                    zoomout: true,
+                                    pan: true,
+                                    reset: true,
+                                },
+                            },
+                        },
+                        colors: ['#00E396', '#FF4560'], // Green for read, Red for write
+                        series: [{
+                            name: 'Disk Read',
+                            data: {{ json_encode($chartData['pointDiskReadBytes']) }}
+                        }, {
+                            name: 'Disk Write',
+                            data: {{ json_encode($chartData['pointDiskWriteBytes']) }}
+                        }],
+                        xaxis: {
+                            categories: {{ json_encode($chartData['dates']) }},
+                            labels: {
+                                rotate: -45,
+                                rotateAlways: true,
+                                style: {
+                                    fontSize: '12px',
+                                }
+                            }
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2,
+                        },
+                        legend: {
+                            position: 'top'
+                        },
+                        markers: {
+                            size: 0,  // Change from 4 to 0 to remove dots
+                        },
+                        grid: {
+                            borderColor: isDarkMode ? '#404040' : '#e7e7e7',
+                            row: {
+                                colors: [isDarkMode ? '#333' : '#f3f3f3', 'transparent'],
+                                opacity: 0.5
+                            },
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'KB/s'
+                            },
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(2);
                                 }
                             }
                         },
