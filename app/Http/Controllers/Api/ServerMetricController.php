@@ -14,7 +14,7 @@ class ServerMetricController extends Controller
     {
         // Validate API Key
         $server = Server::where('api_key', $request->header('X-API-Key'))->first();
-        
+
         if (!$server) {
             return response()->json([
                 'message' => 'Invalid API Key'
@@ -25,7 +25,7 @@ class ServerMetricController extends Controller
         $validator = Validator::make($request->all(), [
             'timestamp' => 'required|string',
             'hostname' => 'required|string',
-            'uptime' => 'required|integer',
+            'uptime' => 'required|numeric',
             'cpu.currentLoad' => 'required|numeric',
             'memory.total' => 'required|numeric',
             'memory.used' => 'required|numeric',
@@ -59,7 +59,7 @@ class ServerMetricController extends Controller
         $metric = new ServerMetric();
         $metric->server_id = $server->id;
         $metric->timestamp = strtotime($request->timestamp);
-        $metric->uptime = $request->uptime;
+        $metric->uptime = (int) $request->uptime;
         $metric->cpu_load = $request->input('cpu.currentLoad');
         $metric->memory_total = $request->input('memory.total');
         $metric->memory_used = $request->input('memory.used');
