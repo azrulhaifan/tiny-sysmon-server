@@ -44,6 +44,9 @@ class ServerMetrics extends Page implements HasForms
             'dateEnd' => Carbon::now()->endOfDay()->format('Y-m-d H:i'),
             'timeframe' => '30s', // Add default timeframe here
         ]);
+
+        // initial load
+        $this->submit();
     }
     
     public function form(Form $form): Form
