@@ -40,8 +40,8 @@ class ServerMetrics extends Page implements HasForms
     {
         $this->record = $record;
         $this->form->fill([
-            'dateStart' => Carbon::now()->subHours(3)->format('Y-m-d H:i'),
-            'dateEnd' => Carbon::now()->format('Y-m-d H:i'),
+            'dateStart' => Carbon::now()->subHours(1)->format('Y-m-d H:i'),
+            'dateEnd' => Carbon::now()->endOfDay()->format('Y-m-d H:i'),
             'timeframe' => '30s', // Add default timeframe here
         ]);
     }
@@ -63,7 +63,7 @@ class ServerMetrics extends Page implements HasForms
                                 DateTimePicker::make('dateEnd')
                                     ->label('Date End')
                                     ->required()
-                                    ->maxDate(now())
+                                    ->maxDate(now()->endOfDay())
                                     ->seconds(false)
                                     ->displayFormat('Y-m-d H:i'),
                                 Select::make('timeframe')
