@@ -26,14 +26,14 @@ class ServerMetrics extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static ?string $navigationLabel = 'Metrics';
     protected static ?string $title = 'Server Metrics';
-    
+
     protected static string $view = 'filament.resources.server-resource.pages.server-metrics';
 
     public ?array $data = [];
     public ?array $chartData = [];
     public bool $isChartVisible = false;
     public string $selectedTimeframe = '30s';
-    
+
     public $record;
 
     public function mount($record): void
@@ -48,7 +48,7 @@ class ServerMetrics extends Page implements HasForms
         // initial load
         $this->submit();
     }
-    
+
     public function form(Form $form): Form
     {
         return $form
@@ -60,7 +60,7 @@ class ServerMetrics extends Page implements HasForms
                                 DateTimePicker::make('dateStart')
                                     ->label('Date Start')
                                     ->required()
-                                    ->maxDate(fn () => $this->data['dateEnd'] ?? now())
+                                    ->maxDate(fn() => $this->data['dateEnd'] ?? now())
                                     ->seconds(false)
                                     ->displayFormat('Y-m-d H:i'),
                                 DateTimePicker::make('dateEnd')
@@ -72,6 +72,7 @@ class ServerMetrics extends Page implements HasForms
                                 Select::make('timeframe')
                                     ->label('Time Frame')
                                     ->options([
+                                        '15s' => '15 Seconds',
                                         '30s' => '30 Seconds',
                                         '1m' => '1 Minute',
                                         '2m' => '2 Minutes',
@@ -91,10 +92,10 @@ class ServerMetrics extends Page implements HasForms
     public function submit(): void
     {
         $this->validate();
-        
+
         $dateStart = Carbon::parse($this->data['dateStart']);
         $dateEnd = Carbon::parse($this->data['dateEnd']);
-        
+
         if ($dateEnd->diffInHours($dateStart) > 24) {
             Notification::make()
                 ->warning()
@@ -103,12 +104,13 @@ class ServerMetrics extends Page implements HasForms
                 ->send();
             return;
         }
-        
+
         $dateStart = strtotime($dateStart);
         $dateEnd = strtotime($dateEnd);
-        
+
         // Get interval in seconds based on timeframe
-        $interval = match($this->data['timeframe']) {
+        $interval = match ($this->data['timeframe']) {
+            '15s' => 15,
             '30s' => 30,
             '1m' => 60,
             '2m' => 120,
@@ -120,27 +122,27 @@ class ServerMetrics extends Page implements HasForms
 
         // Temporarily disable ONLY_FULL_GROUP_BY
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
-        
+
         $metrics = ServerMetric::select(
-                DB::raw("FLOOR(timestamp / {$interval}) * {$interval} as time_interval"),
-                DB::raw("FROM_UNIXTIME(FLOOR(timestamp / {$interval}) * {$interval}) as dates"),
-                DB::raw('AVG(cpu_load) as pointCpu'),
-                DB::raw('AVG(memory_used_percent) as pointMemory'),
-                DB::raw('AVG(swap_used_percent) as pointSwap'),
-                DB::raw('AVG(disk_read_ops_per_sec) as pointDiskRead'),
-                DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite'),
-                DB::raw('AVG(network_rx_sec / 1024) as pointNetworkRx'),
-                DB::raw('AVG(network_tx_sec / 1024) as pointNetworkTx')
-            )
+            DB::raw("FLOOR(timestamp / {$interval}) * {$interval} as time_interval"),
+            DB::raw("FROM_UNIXTIME(FLOOR(timestamp / {$interval}) * {$interval}) as dates"),
+            DB::raw('AVG(cpu_load) as pointCpu'),
+            DB::raw('AVG(memory_used_percent) as pointMemory'),
+            DB::raw('AVG(swap_used_percent) as pointSwap'),
+            DB::raw('AVG(disk_read_ops_per_sec) as pointDiskRead'),
+            DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite'),
+            DB::raw('AVG(network_rx_sec / 1024) as pointNetworkRx'),
+            DB::raw('AVG(network_tx_sec / 1024) as pointNetworkTx')
+        )
             ->where('server_id', $this->record)
             ->whereBetween('timestamp', [$dateStart, $dateEnd])
             ->groupBy(DB::raw("FLOOR(timestamp / {$interval}) * {$interval}"))
             ->orderBy('time_interval')
             ->get();
-            
+
         // Reset session SQL mode
         DB::statement("SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode,',ONLY_FULL_GROUP_BY'));");
-        
+
         $this->chartData = [
             'dates' => $metrics->pluck('dates'),
             'pointCpu' => $metrics->pluck('pointCpu'),
@@ -151,7 +153,7 @@ class ServerMetrics extends Page implements HasForms
             'pointNetworkRx' => $metrics->pluck('pointNetworkRx'),
             'pointNetworkTx' => $metrics->pluck('pointNetworkTx'),
         ];
-        
+
         $this->isChartVisible = true;
     }
 }
