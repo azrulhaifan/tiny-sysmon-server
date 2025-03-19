@@ -1,66 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Server Resource Monitoring System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is an open-source server resource monitoring system designed to collect and visualize server resource metrics. Currently, it supports Linux servers only. The software is built using Laravel 12, PHP 8.2, MySQL database, and Filament 3.2 for the admin interface.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Collects metrics from server resources:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+    -   **CPU Load** (%)
+    -   **Memory Load** (%)
+    -   **Swap Load** (%)
+    -   **Network Traffic** (KB/s)
+    -   **Disk Load (IOPS)**
+    -   **Disk R/W Operations** (KB/s)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   Monitor multiple servers at once.
+-   Data is sent from a separate agent software, which is provided alongside the main system.
+-   Simple, intuitive web interface for managing and visualizing metrics.
+-   Built with modern PHP and Laravel technologies to ensure scalability and performance.
+-   **Data Retention**: The software supports data retention for metric records, configurable per server being monitored. Metrics are stored for a specific retention period and are automatically deleted once they exceed the configured retention time.
 
-## Learning Laravel
+## Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Before you begin, ensure you have met the following requirements:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   **Linux-based server** for server being monitored.
+-   PHP 8.2 or higher
+-   MySQL database
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation
 
-## Laravel Sponsors
+1. Clone the repository to your local machine or server:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    ```bash
+    git https://github.com/azrulhaifan/tiny-sysmon-server
+    ```
 
-### Premium Partners
+2. Navigate into the project directory:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    ```bash
+    cd tiny-sysmon-server
+    ```
 
-## Contributing
+3. Install the required PHP dependencies:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    composer install
+    ```
 
-## Code of Conduct
+4. Set up your `.env` file for configuration:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    cp .env.example .env
+    ```
 
-## Security Vulnerabilities
+5. Configure the database settings in `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ```dotenv
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=your_database_name
+    DB_USERNAME=your_database_username
+    DB_PASSWORD=your_database_password
+    ```
+
+6. Run the database migrations:
+
+    ```bash
+    php artisan migrate
+    ```
+
+7. Serve the application locally:
+
+    ```bash
+    php artisan serve
+    ```
+
+8. Access the application via your browser at `http://localhost:8000/apps`.
+
+9. You may add filament user with this command :
+
+    ```bash
+    php artisan make:filament-user
+    ```
+
+## Agent Installation
+
+The monitoring system requires an agent installed on each server you want to monitor. The agent collects and sends metrics to the main server.
+
+1. Configure the agent software from this [repo](https://github.com/azrulhaifan/tiny-sysmon-agent).
+
+## Usage
+
+Once the application is running, you can access the following features:
+
+-   **Dashboard**: View a simple stats overview of total server and total metric record.
+-   **Server Management**: Add and configure multiple servers to monitor.
+-   **Metric Visualization**: Analyze and track resource usage over time.
+
+## Planning
+
+The following features are planned for future releases:
+
+1. **Alert System**
+
+    - Provide notifications via Telegram or email when a server resource exceeds predefined thresholds (e.g., high CPU load over a certain period of time, etc.).
+
+2. **Notification Settings**
+
+    - Allow users to configure notification media, including setting up Telegram and email server configurations.
+
+3. **Launch SAAS Software**
+    - In the future, this software will serve as the foundation for a new system supporting Software as a Service (SAAS) to allow broader deployment and scalability.
+
+## Contribution
+
+If you would like to contribute to this project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -am 'Add feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Create a new pull request.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/azrulhaifan/tiny-sysmon-server/blob/main/LICENSE) file for details.
+
+## Acknowledgments
+
+-   Laravel 12 for the powerful backend framework.
+-   Filament 3.2 for the beautiful admin panel.
+-   The open-source community for continuous support and contributions.
