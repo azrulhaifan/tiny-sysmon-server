@@ -63,8 +63,10 @@
                                             second: '2-digit',
                                             hour12: false
                                         });
-                                }
-                            }
+                                },
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
@@ -204,7 +206,9 @@
                                             hour12: false
                                         });
                                 }
-                            }
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
@@ -344,7 +348,9 @@
                                             hour12: false
                                         });
                                 }
-                            }
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
@@ -488,7 +494,9 @@
                                             hour12: false
                                         });
                                 }
-                            }
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
@@ -591,7 +599,9 @@
                                             hour12: false
                                         });
                                 }
-                            }
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
@@ -689,7 +699,9 @@
                                             hour12: false
                                         });
                                 }
-                            }
+                            },
+                            tickAmount: 10,
+                            tickPlacement: 'start',
                         },
                         stroke: {
                             curve: 'smooth',
