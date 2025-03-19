@@ -395,7 +395,6 @@
             }"></div>
         </div>
 
-
         <!-- Disk Load -->
         <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Disk Load (Bps)</h3>
@@ -467,6 +466,97 @@
                             labels: {
                                 formatter: function (val) {
                                     return val.toFixed(2);
+                                }
+                            }
+                        },
+                        theme: {
+                            mode: isDarkMode ? 'dark' : 'light'
+                        }
+                    });
+                    chart.render();
+                }
+            }"></div>
+        </div>
+
+                <!-- Network Traffic -->
+                <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Network Traffic (KB/s)</h3>
+            <div class="h-80" x-data="{
+                init() {
+                    const isDarkMode = document.querySelector('html').classList.contains('dark');
+                    const textColor = isDarkMode ? '#fff' : '#373d3f';
+                    const minColor = isDarkMode ? '#10b981' : '#00E396';
+                    const avgColor = isDarkMode ? '#f59e0b' : '#FEB019';
+                    const maxColor = isDarkMode ? '#ef4444' : '#FF4560';
+
+                    const chart = new ApexCharts(this.$el, {
+                        chart: {
+                            type: 'line',
+                            height: 350,
+                            foreColor: textColor,
+                            toolbar: {
+                                show: true,
+                                tools: {
+                                    download: true,
+                                    selection: true,
+                                    zoom: true,
+                                    zoomin: true,
+                                    zoomout: true,
+                                    pan: true,
+                                    reset: true,
+                                },
+                            },
+                        },
+                        colors: ['#00E396', '#FF4560'],
+                        series: [{
+                            name: 'RX (Download)',
+                            data: {{ json_encode($chartData['pointNetworkRx']) }}
+                        },
+                        {
+                            name: 'TX (Upload)',
+                            data: {{ json_encode($chartData['pointNetworkTx']) }}
+                        }],
+                        xaxis: {
+                            categories: {{ json_encode($chartData['dates']) }},
+                            labels: {
+                                rotate: -45,
+                                rotateAlways: true,
+                                style: {
+                                    fontSize: '12px',
+                                }
+                            }
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2,
+                        },
+                        legend: {
+                            position: 'top'
+                        },
+                        markers: {
+                            size: 0,
+                        },
+                        grid: {
+                            borderColor: isDarkMode ? '#404040' : '#e7e7e7',
+                            row: {
+                                colors: [isDarkMode ? '#333' : '#f3f3f3', 'transparent'],
+                                opacity: 0.5
+                            },
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'KB/s'
+                            },
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(2);
+                                }
+                            }
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function(val) {
+                                    return val.toFixed(2) + ' KB/s';
                                 }
                             }
                         },

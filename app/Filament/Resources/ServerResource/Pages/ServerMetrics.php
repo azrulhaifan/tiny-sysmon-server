@@ -125,7 +125,9 @@ class ServerMetrics extends Page implements HasForms
                 DB::raw('AVG(memory_used_percent) as pointMemory'),
                 DB::raw('AVG(swap_used_percent) as pointSwap'),
                 DB::raw('AVG(disk_read_ops_per_sec) as pointDiskRead'),
-                DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite')
+                DB::raw('AVG(disk_write_ops_per_sec) as pointDiskWrite'),
+                DB::raw('AVG(network_rx_sec / 1024) as pointNetworkRx'),
+                DB::raw('AVG(network_tx_sec / 1024) as pointNetworkTx')
             )
             ->where('server_id', $this->record)
             ->whereBetween('timestamp', [$dateStart, $dateEnd])
@@ -143,6 +145,8 @@ class ServerMetrics extends Page implements HasForms
             'pointSwap' => $metrics->pluck('pointSwap'),
             'pointDiskRead' => $metrics->pluck('pointDiskRead'),
             'pointDiskWrite' => $metrics->pluck('pointDiskWrite'),
+            'pointNetworkRx' => $metrics->pluck('pointNetworkRx'),
+            'pointNetworkTx' => $metrics->pluck('pointNetworkTx'),
         ];
         
         $this->isChartVisible = true;
