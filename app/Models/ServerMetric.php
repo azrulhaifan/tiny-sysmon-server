@@ -29,6 +29,10 @@ class ServerMetric extends Model
         'disk_read_ops_per_sec',
         'disk_write_ops_per_sec',
         'disk_total_ops_per_sec',
+        'network_rx_bytes',
+        'network_tx_bytes',
+        'network_rx_sec',
+        'network_tx_sec',
     ];
 
     protected $casts = [
